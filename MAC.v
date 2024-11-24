@@ -29,7 +29,7 @@ assign wAccNext = wSatFlagP ? 16'h7FFF :
 */
 always @(posedge iClk12M) begin
     if(!iRsn) begin
-        rAccOut <= 16'h0000;
+        //rAccOut <= 16'h0000;
         rMul[0] <= 16'h0000;
         rMul[1] <= 16'h0000;
         rMul[2] <= 16'h0000;
@@ -44,18 +44,36 @@ always @(posedge iClk12M) begin
     end
     else begin
         if(iEnMul) begin
-            rMul[rDelayIndex] <= iCoeff * iDelay[(rDelayIndex+1)*3:rDelayIndex];
-            rDelayIndex <= rDelayIndex + 1;
+            case(rDelayIndex)
+                4'd0: rMul[0] <= iCoeff * iDelay[2:0];
+                4'd1: rMul[1] <= iCoeff * iDelay[5:3];
+                4'd2: rMul[2] <= iCoeff * iDelay[8:6];
+                4'd3: rMul[3] <= iCoeff * iDelay[11:9];
+                4'd4: rMul[4] <= iCoeff * iDelay[14:12];
+                4'd5: rMul[5] <= iCoeff * iDelay[17:15];
+                4'd6: rMul[6] <= iCoeff * iDelay[20:18];
+                4'd7: rMul[7] <= iCoeff * iDelay[23:21];
+                4'd8: rMul[8] <= iCoeff * iDelay[26:24];
+                4'd9: rMul[9] <= iCoeff * iDelay[29:27];
+            endcase
             if(rDelayIndex == 4'b1010)
                 rDelayIndex <= 4'b0000;
+            else
+                rDelayIndex <= rDelayIndex + 1;
         end
         if(iEnAddAcc) begin
-            if(rDelayIndex == 4'b0000) begin
-                rAcc[0] = rMul[0] + 16'h0000;
-            end
-            else begin
-                rAcc[rDelayIndex] = rMul[rDelayIndex] + rAcc[rDelayIndex - 1];
-            end
+            case(rDelayIndex)
+                4'd0: rAcc[0] <= rMul[0] + 16'h0000;
+                4'd1: rAcc[1] <= rMul[1] * rAcc[0];
+                4'd2: rAcc[2] <= rMul[2] * rAcc[1];
+                4'd3: rAcc[3] <= rMul[3] * rAcc[2];
+                4'd4: rAcc[4] <= rMul[4] * rAcc[3];
+                4'd5: rAcc[5] <= rMul[5] * rAcc[4];
+                4'd6: rAcc[6] <= rMul[6] * rAcc[5];
+                4'd7: rAcc[7] <= rMul[7] * rAcc[6];
+                4'd8: rAcc[8] <= rMul[8] * rAcc[7];
+                4'd9: rAcc[9] <= rMul[9] * rAcc[8];
+            endcase
         end
     end
 end

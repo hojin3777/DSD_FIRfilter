@@ -115,7 +115,7 @@ initial begin
     CsnRam <= 1'b1;
     WrnRam <= 1'b1;
     $display("----------input and ram rd ended----------");
-    repeat(2) @(posedge EnSample600k);
+    repeat(4) @(posedge EnSample600k);
 
     $finish;
 end
