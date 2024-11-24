@@ -96,15 +96,16 @@ initial begin
     repeat(2) @(posedge Clk12M);
     CoeffUpdateFlag <= 1'b0;
     $display("----------Ram update ended----------");
-    repeat(3) @(posedge Clk12M);
+    repeat(1) @(posedge Clk12M);
+    CsnRam <= 1'b0;
+    WrnRam <= 1'b1;
+    repeat(2) @(posedge Clk12M);
     
     //Firfilter operation phase
     FirIn <= 3'b001;
     $display("----------input 001 and ram rd----------");
     repeat(1) @(posedge Clk12M); //wait for EnSample600k
     FirIn <= 3'b000;
-    CsnRam <= 1'b0;
-    WrnRam <= 1'b1;
     for(i=0; i<11; i=i+1) begin
         repeat(1) begin
             AddrRam <= i;

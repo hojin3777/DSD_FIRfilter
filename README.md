@@ -79,6 +79,7 @@ else <=> p_Update------------>p_MemRd <=> else
 - DelayChain
     - 대칭 구조를 버리고 0부터 39번째 tap까지 순환하도록 변경
     - output을 [3:0] oDelaySum에서 [29:0] oDelay1~4 로 변경, 3비트의 값 10개를 concat해서 각 MAC 모듈로 전송
+    - iEnDelay와 관계없이 Sample 신호만 따르도록 임시조치
  
 - ReConf_FirFilter
     - [2:0] wDelay를 [29:0] wDelay1\~4으로 변경. 각 MAC 모듈엔 wDelay1~4 전달(inst_DelayChain output 및 각 MAC 모듈 input 수정)
@@ -88,3 +89,6 @@ else <=> p_Update------------>p_MemRd <=> else
     - 인덱스별 곱셈 결와와 누적합을 저장하는 reg [15:0] rMul, rAcc [9:0] 추가
     - 곱셈과 누적 연산 인덱스를 지정하는 rDelayIndex[3:0] 추가
     - Saturation check 임시 비활성화
+
+- ReConf_FirFilter_tb
+    - iCsnRam, iWrnRam 타이밍 일부 조절

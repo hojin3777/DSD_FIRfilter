@@ -15,10 +15,11 @@ always @(posedge iClk12M) begin
             rDelay[i] <= 3'b000;
         end
     end
-    if(iEnDelay) begin
-        rDelay[0] <= iFirIn;
-    end
+    // if(iEnDelay) begin
+    //     rDelay[0] <= iFirIn;
+    // end
     if(iEnSample600k) begin
+        rDelay[0] <= iFirIn; //iEnDelay와 관계없이 Sample 신호만 따르도록 임시조치
         rDelay[1]  <= rDelay[0];
         rDelay[2]  <= rDelay[1];
         rDelay[3]  <= rDelay[2];
