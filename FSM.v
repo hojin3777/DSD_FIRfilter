@@ -8,9 +8,9 @@ module FSM(
 
     // To SpSram
     output reg oCsnRam, oWrnRam,
-    output reg [3:0] oAddrRam,
-    output reg [1:0] oModuleSel, //[5:4] iAddr
-    output reg [15:0] oWtDtRam,
+    output [3:0] oAddrRam,
+    output [1:0] oModuleSel, //[5:4] iAddr
+    output [15:0] oWtDtRam,
     // To MAC
     output reg oEnMul,
     output reg oEnAddAcc,
@@ -100,20 +100,6 @@ always @(posedge iClk12M) begin
     end
 end
 */
-// Module selection and data input
-always @(posedge iClk12M) begin
-    if(!iRsn) begin
-        oModuleSel <= 2'b00;
-        oAddrRam <= 4'b0000;
-        oWtDtRam <= 16'h0000;
-    end
-    else begin
-        oModuleSel <= iAddrRam[5:4];
-        oAddrRam <= iAddrRam[3:0];
-        oWtDtRam <= iWtDtRam;
-    end
-end
-
 // Control signals
 always @(*) begin
     // Default
@@ -139,5 +125,10 @@ always @(*) begin
         end
     endcase
 end
+
+// Module selection and data input
+assign oModuleSel = iAddrRam[5:4];
+assign oAddrRam = iAddrRam[3:0];
+assign oWtDtRam = iWtDtRam;
 
 endmodule

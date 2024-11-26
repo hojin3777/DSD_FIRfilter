@@ -41,17 +41,16 @@ end
 
 initial begin
     //coefficients
-    coeff_mem[0] = 9'b0_0000_1100; 
-    coeff_mem[1] = 9'b0_0000_0000; 
-    coeff_mem[2] = 9'b0_0001_0011; 
-    coeff_mem[3] = 9'b0_0001_0111; 
-    coeff_mem[4] = 9'b0_0000_0000; 
-    coeff_mem[5] = 9'b0_0010_0100; 
-    coeff_mem[6] = 9'b0_0011_0000; 
-    coeff_mem[7] = 9'b0_0000_0000; 
-    coeff_mem[8] = 9'b0_0110_0101; 
-    coeff_mem[9] = 9'b0_1100_1101; 
-    coeff_mem[10] = 9'b1_1111_0011;
+    coeff_mem[0] = 12'ha01; 
+    coeff_mem[1] = 12'ha02; 
+    coeff_mem[2] = 12'ha03; 
+    coeff_mem[3] = 12'ha04; 
+    coeff_mem[4] = 12'ha05; 
+    coeff_mem[5] = 12'ha06; 
+    coeff_mem[6] = 12'ha07; 
+    coeff_mem[7] = 12'ha08; 
+    coeff_mem[8] = 12'ha09; 
+    coeff_mem[9] = 12'ha0a;
     //Initial signals
     Clk12M <= 1'b0;
     EnSample600k <= 1'b0;
@@ -79,12 +78,13 @@ initial begin
     repeat(3) @(posedge Clk12M);
     $display("----------Raise Coeff flag and ram wrt----------");
     CoeffUpdateFlag <= 1'b1;
-    repeat(1) @(posedge Clk12M);
+    repeat(2) @(posedge Clk12M);
     CsnRam <= 1'b0;
     WrnRam <= 1'b0;
-    for(i=0; i<11; i=i+1) begin
+    repeat(1) @(posedge Clk12M);
+    for(i=0; i<10; i=i+1) begin
         repeat(1) begin
-            AddrRam <= i;
+            AddrRam <= i[3:0];
             WtDtRam <= coeff_mem[i];
             @(posedge Clk12M);
         end
@@ -93,22 +93,22 @@ initial begin
     CsnRam <= 1'b1;
     WrnRam <= 1'b1;
     WtDtRam <= 16'h0000;
-    repeat(2) @(posedge Clk12M);
+    repeat(3) @(posedge Clk12M);
     CoeffUpdateFlag <= 1'b0;
     $display("----------Ram update ended----------");
-    repeat(1) @(posedge Clk12M);
+    repeat(2) @(posedge Clk12M);
+
+    //Firfilter operation phase
     CsnRam <= 1'b0;
     WrnRam <= 1'b1;
-    repeat(2) @(posedge Clk12M);
-    
-    //Firfilter operation phase
+    repeat(1) @(posedge Clk12M);
     FirIn <= 3'b001;
     $display("----------input 001 and ram rd----------");
     repeat(1) @(posedge Clk12M); //wait for EnSample600k
     FirIn <= 3'b000;
-    for(i=0; i<11; i=i+1) begin
+    for(i=0; i<10; i=i+1) begin
         repeat(1) begin
-            AddrRam <= i;
+            AddrRam <= i[3:0];
             @(posedge Clk12M);
         end
     end

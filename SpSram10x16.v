@@ -5,11 +5,11 @@ module SpSram10x16(
     input [3:0] iAddrRam, //Write Addr.
     input [15:0] iWtDtRam, //Write Data
     
-    output [15:0] oRdDtRam //Read Data
+    output reg [15:0] oRdDtRam //Read Data
 );
 
 reg [15:0] rRam [9:0];
-reg [15:0] rRdbuffer;
+// reg [15:0] rRdbuffer;
 
 always @(posedge iClk12M) begin
     if(!iRsn) begin
@@ -23,7 +23,8 @@ always @(posedge iClk12M) begin
         rRam[7] <= 16'h0000;
         rRam[8] <= 16'h0000;
         rRam[9] <= 16'h0000;
-        rRdbuffer <= 16'h0000;
+        oRdDtRam <= 16'h0000;
+        // rRdbuffer <= 16'h0000;
     end
     if(!iCsnRam && !iWrnRam) begin
         // Data In referr to SRAM interface & timing
@@ -41,24 +42,24 @@ always @(posedge iClk12M) begin
             default: ;//Error?
         endcase
     end
-    else if (!iCsnRam && iWrnRam) begin
+    if (!iCsnRam && iWrnRam) begin
         // Data out referr to SRAM interface & timing
         case (iAddrRam)
-            4'h0: rRdbuffer <= rRam[0];
-            4'h1: rRdbuffer <= rRam[1];
-            4'h2: rRdbuffer <= rRam[2];
-            4'h3: rRdbuffer <= rRam[3];
-            4'h4: rRdbuffer <= rRam[4];
-            4'h5: rRdbuffer <= rRam[5];
-            4'h6: rRdbuffer <= rRam[6];
-            4'h7: rRdbuffer <= rRam[7];
-            4'h8: rRdbuffer <= rRam[8];
-            4'h9: rRdbuffer <= rRam[9];
-            default: rRdbuffer <= 16'h0000;//Error?
+            4'h0: oRdDtRam <= rRam[0];
+            4'h1: oRdDtRam <= rRam[1];
+            4'h2: oRdDtRam <= rRam[2];
+            4'h3: oRdDtRam <= rRam[3];
+            4'h4: oRdDtRam <= rRam[4];
+            4'h5: oRdDtRam <= rRam[5];
+            4'h6: oRdDtRam <= rRam[6];
+            4'h7: oRdDtRam <= rRam[7];
+            4'h8: oRdDtRam <= rRam[8];
+            4'h9: oRdDtRam <= rRam[9];
+            default: oRdDtRam <= 16'h0000;//Error?
         endcase
     end
 end
 
-assign oRdDtRam = rRdbuffer;
+// assign oRdDtRam = rRdbuffer;
 
 endmodule

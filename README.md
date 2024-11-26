@@ -92,3 +92,13 @@ else <=> p_Update------------>p_MemRd <=> else
 
 - ReConf_FirFilter_tb
     - iCsnRam, iWrnRam 타이밍 일부 조절
+
+### 11.26 수정사항
+- FSM
+    - oModuleSel, oAddrRam, oWtDtRam이 clock과 관계없이 wire 처럼 동작하도록 수정
+
+- SpSram10x16
+    - Rdbuffer 없이 바로 출력하도록 변경. 그래도 top 파일에서는 2클럭 이후 값을 집어넣어도 첫번째 값이 write가 안된듯 싶다.....
+
+- ReConf_FirFilter_tb
+    - 바뀐 모듈에 따라 타이밍 조절
