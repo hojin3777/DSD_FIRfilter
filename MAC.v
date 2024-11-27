@@ -5,13 +5,14 @@ module MAC(
     input signed [29:0] iDelay, // Delay chain input
     input signed [15:0] iCoeff, // Coeff from SpSram output
 
-    output reg [15:0] oMac
+    output reg signed [15:0] oMac
 );
 
-reg [15:0] rMul [9:0];
+reg signed [15:0] rMul [9:0];
 reg [15:0] rAcc [9:0];
 reg [3:0] rDelayIndex; // max 1001;
-/*
+reg signed [2:0] rDelay [9:0];
+/* //saturation check 임시 비활성화
 wire signed [15:0] wMulResult;
 reg signed [15:0] rAccOut;
 reg signed [15:0] rMul;
@@ -28,6 +29,18 @@ assign wAccNext = wSatFlagP ? 16'h7FFF :
                   wSatFlagN ? 16'h8000 :
                   rAccOut + rMul;
 */
+always @(*) begin
+    rDelay[0] <= iDelay[2:0];
+    rDelay[1] <= iDelay[5:3];
+    rDelay[2] <= iDelay[8:6];
+    rDelay[3] <= iDelay[11:9];
+    rDelay[4] <= iDelay[14:12];
+    rDelay[5] <= iDelay[17:15];
+    rDelay[6] <= iDelay[20:18];
+    rDelay[7] <= iDelay[23:21];
+    rDelay[8] <= iDelay[26:24];
+    rDelay[9] <= iDelay[29:27];
+end
 always @(posedge iClk12M) begin
     if(!iRsn) begin
         //rAccOut <= 16'h0000;
@@ -55,16 +68,16 @@ always @(posedge iClk12M) begin
     end
     if(iEnMul) begin
         case(rDelayIndex) //타이밍 문제로 곱셈과 누산 연산을 합쳐 테스트
-            4'd0: rMul[0] <= iCoeff * iDelay[2:0];
-            4'd1: rMul[1] <= rMul[0] + iCoeff * iDelay[5:3];
-            4'd2: rMul[2] <= rMul[1] + iCoeff * iDelay[8:6];
-            4'd3: rMul[3] <= rMul[2] + iCoeff * iDelay[11:9];
-            4'd4: rMul[4] <= rMul[3] + iCoeff * iDelay[14:12];
-            4'd5: rMul[5] <= rMul[4] + iCoeff * iDelay[17:15];
-            4'd6: rMul[6] <= rMul[5] + iCoeff * iDelay[20:18];
-            4'd7: rMul[7] <= rMul[6] + iCoeff * iDelay[23:21];
-            4'd8: rMul[8] <= rMul[7] + iCoeff * iDelay[26:24];
-            4'd9: rMul[9] <= rMul[8] + iCoeff * iDelay[29:27];
+            4'd0: rMul[0] <= iCoeff * rDelay[0];
+            4'd1: rMul[1] <= rMul[0] + iCoeff * rDelay[1];
+            4'd2: rMul[2] <= rMul[1] + iCoeff * rDelay[2];
+            4'd3: rMul[3] <= rMul[2] + iCoeff * rDelay[3];
+            4'd4: rMul[4] <= rMul[3] + iCoeff * rDelay[4];
+            4'd5: rMul[5] <= rMul[4] + iCoeff * rDelay[5];
+            4'd6: rMul[6] <= rMul[5] + iCoeff * rDelay[6];
+            4'd7: rMul[7] <= rMul[6] + iCoeff * rDelay[7];
+            4'd8: rMul[8] <= rMul[7] + iCoeff * rDelay[8];
+            4'd9: rMul[9] <= rMul[8] + iCoeff * rDelay[9];
         endcase
         if(rDelayIndex == 4'b1001)
             rDelayIndex <= 4'b0000;

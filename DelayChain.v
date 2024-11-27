@@ -1,7 +1,7 @@
 module DelayChain(
     input iClk12M, iRsn, iEnSample600k, 
     input iEnDelay,
-    input [2:0] iFirIn,
+    input signed [2:0] iFirIn,
 
     output [29:0] oDelay1, oDelay2, oDelay3, oDelay4
 );
