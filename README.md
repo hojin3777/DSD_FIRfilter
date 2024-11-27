@@ -116,6 +116,7 @@ else <=> p_Update------------>p_MemRd <=> else
 
 - MAC
     - output 신호 output reg 로 변경
+    - 타이밍 문제로 Mul 연산과 Acc 연산을 동시에 수행하도록 변경
 
 - SpSram10x16
     - 읽기/쓰기 신호가 없는 경우 16'h0000 출력하도록 변경
