@@ -41,8 +41,8 @@ always @(posedge iClk12M) begin
             4'h9: rRam[9] <= iWtDtRam;
             default: ;//Error?
         endcase
-    end
-    if (!iCsnRam && iWrnRam) begin
+    end 
+    else if (!iCsnRam && iWrnRam) begin
         // Data out referr to SRAM interface & timing
         case (iAddrRam)
             4'h0: oRdDtRam <= rRam[0];
@@ -58,6 +58,8 @@ always @(posedge iClk12M) begin
             default: oRdDtRam <= 16'h0000;//Error?
         endcase
     end
+    else
+        oRdDtRam <= 16'h0000;
 end
 
 // assign oRdDtRam = rRdbuffer;

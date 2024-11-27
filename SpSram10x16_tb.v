@@ -30,16 +30,16 @@ always #41.66666 Clk12M = ~Clk12M;
 // Test Sequence
 initial begin
     // Initialize test data (coefficients from PDF)
-    test_data[0] = 12'ha01;
-    test_data[1] = 12'ha02;
-    test_data[2] = 12'ha03;
-    test_data[3] = 12'ha04;
-    test_data[4] = 12'ha05;
-    test_data[5] = 12'ha06;
-    test_data[6] = 12'ha07;
-    test_data[7] = 12'ha08;
-    test_data[8] = 12'ha09;
-    test_data[9] = 12'ha0a;
+    test_data[0] = 12'ha00;
+    test_data[1] = 12'ha01;
+    test_data[2] = 12'ha02;
+    test_data[3] = 12'ha03;
+    test_data[4] = 12'ha04;
+    test_data[5] = 12'ha05;
+    test_data[6] = 12'ha06;
+    test_data[7] = 12'ha07;
+    test_data[8] = 12'ha08;
+    test_data[9] = 12'ha09;
 
     // Initialize
     Clk12M = 0;
@@ -51,11 +51,11 @@ initial begin
     errors = 0;
     
     // Reset
-    #100;
+    repeat(1) @(posedge Clk12M);
     Rsn = 0;
-    #100;
+    repeat(1) @(posedge Clk12M);
     Rsn = 1;
-    #100;
+    repeat(1) @(posedge Clk12M);
     
     // Write Test Sequence
     $display("\nStarting Write Test Sequence");
@@ -77,7 +77,7 @@ initial begin
     WrnRam = 1;
     AddrRam = 4'h0;  // Reset address to 0
     
-    #100;
+    repeat(5) @(posedge Clk12M);
     
     // Read Test Sequence
     $display("\nStarting Read Test Sequence");

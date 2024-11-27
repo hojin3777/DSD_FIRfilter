@@ -2,6 +2,7 @@ module FSM(
     input iClk12M, iRsn, iEnSample600k,
     input iCoeffUpdateFlag,
     input iCsnRam, iWrnRam,
+    input iEnMul, iEnAddAcc,
     input [5:0] iAddrRam,
     input [15:0] iWtDtRam,
     //input [5:0] iNumOfCoeff, //Not used in this project
@@ -55,30 +56,30 @@ always @(*) begin
     case(rCurState)
         p_Idle: begin
             if(iCoeffUpdateFlag)
-                rNxtState = p_Update;
+                rNxtState <= p_Update;
             else if(wMemRdFlag)
-                rNxtState = p_MemRd;
+                rNxtState <= p_MemRd;
             else
-                rNxtState = p_Idle;
+                rNxtState <= p_Idle;
         end
         p_Update: begin
             if(!iCoeffUpdateFlag)
-                rNxtState = p_Idle;
+                rNxtState <= p_Idle;
             else if(wMemRdFlag)
-                rNxtState = p_MemRd;
+                rNxtState <= p_MemRd;
             else
-                rNxtState = p_Update;
+                rNxtState <= p_Update;
         end
         p_MemRd: begin
             if(wLastRd)
-                rNxtState = p_Out;
+                rNxtState <= p_Out;
             else
-                rNxtState = p_MemRd;
+                rNxtState <= p_MemRd;
         end
         p_Out: begin
-            rNxtState = p_Idle;
+            rNxtState <= p_Idle;
         end
-        default: rNxtState = p_Idle;
+        default: rNxtState <= p_Idle;
     endcase
 end
 /* // iAddrRam의 값은 tb에서 처리.
@@ -109,19 +110,25 @@ always @(*) begin
     oEnAddAcc = 1'b0;
     oEnDelay = 1'b0;
     case(rCurState)
+        p_Idle: begin //임시조치
+            oCsnRam <= iCsnRam;
+            oWrnRam <= iWrnRam;
+        end
         p_Update: begin
-            oCsnRam = 1'b0;
-            oWrnRam = 1'b0;
+            oCsnRam <= iCsnRam;
+            oWrnRam <= iWrnRam;
         end
         p_MemRd: begin
-            oCsnRam = 1'b0;
-            oWrnRam = 1'b1;
-            oEnMul = 1'b1;
-            oEnAddAcc = 1'b1;
-            oEnDelay = 1'b1;
+            oCsnRam <= iCsnRam;
+            oWrnRam <= iWrnRam;
+            oEnMul <= iEnMul;
+            oEnAddAcc <= iEnAddAcc;
+            oEnDelay <= 1'b1;
         end
         p_Out: begin
             oEnAddAcc = 1'b1;
+            oEnMul <= iEnMul;
+            oEnAddAcc <= iEnAddAcc;
         end
     endcase
 end

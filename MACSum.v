@@ -14,6 +14,14 @@ always @(posedge iClk12M) begin
         rFinalSumDelay <= 16'h0000;
     end
     else begin
+        rFinalSumDelay <= iMac1 + iMac2 + iMac3 + iMac4;
+    end
+    if(iEnSample600k) begin
+        rFinalSum <= rFinalSumDelay;
+    end
+
+    /*
+    else begin
         if(iEnDelay)begin
             rFinalSumDelay <= iMac1 + iMac2 + iMac3 + iMac4;
         end
@@ -21,6 +29,7 @@ always @(posedge iClk12M) begin
             rFinalSum <= rFinalSumDelay;
         end
     end
+    */
 end
 
 assign oFirOut = rFinalSum;

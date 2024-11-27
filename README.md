@@ -102,3 +102,27 @@ else <=> p_Update------------>p_MemRd <=> else
 
 - ReConf_FirFilter_tb
     - 바뀐 모듈에 따라 타이밍 조절
+
+- SpSram10x16_tb 추가, 테스트 시 Sram 정상 동작
+
+### 11.27 수정사항
+- FSM
+    - iEnMul, iEnAddAcc 신호 추가. memrd state에서만 해당 input을 output으로 전달하도록 변경 => 두 신호를 state에 어느정도 따르면서 직접 제어할 수 있음
+    - 그 외에 신호도 직접 input에서 제어할 수 있도록 변경, 다만 state에 따라 제어할 수 있는 신호가 다름
+    - idle 에서도 신호를 외부에서 제어할 수 있도록 임시조치
+
+- ReConf_FirFilter
+    - input 신호 iEnMul, iEnAddAcc 추가.
+
+- MAC
+    - output 신호 output reg 로 변경
+
+- SpSram10x16
+    - 읽기/쓰기 신호가 없는 경우 16'h0000 출력하도록 변경
+
+- MACSum
+    - iEnDelay 신호와 관계없이 매 클럭 네 MAC 모듈의 값을 더하도록 변경
+
+- 김진호
+    - ModuleSelector_tb 추가, 테스트 시 정상 동작
+    - DelayChain_tb, MACSum_tb 추가, 변경된 모델에 대해 테스트 필요 
