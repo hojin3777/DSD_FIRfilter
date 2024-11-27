@@ -117,6 +117,7 @@ else <=> p_Update------------>p_MemRd <=> else
 - MAC
     - output 신호 output reg 로 변경
     - 타이밍 문제로 Mul 연산과 Acc 연산을 동시에 수행하도록 변경
+    - rDelayIndex 0으로 복귀 조건 수정
 
 - SpSram10x16
     - 읽기/쓰기 신호가 없는 경우 16'h0000 출력하도록 변경
@@ -124,6 +125,10 @@ else <=> p_Update------------>p_MemRd <=> else
 - MACSum
     - iEnDelay 신호와 관계없이 매 클럭 네 MAC 모듈의 값을 더하도록 변경
 
-- 김진호
+- 모듈별 테스트벤치 추가(김진호)
     - ModuleSelector_tb 추가, 테스트 시 정상 동작
-    - DelayChain_tb, MACSum_tb 추가, 변경된 모델에 대해 테스트 필요 
+
+- 11.27 22:30까지 테스트 결과
+    - input 001에 대한 결과 정상적으로 출력(일부 알고리즘 과도한 단순화로 개선 필요)
+    - input 111의 경우 *7의 결과가 나옴(예상 출력 F600)
+    - 해당 지점까지 백업 후 signed number 처리 과정 수정

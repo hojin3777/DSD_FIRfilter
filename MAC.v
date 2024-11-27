@@ -66,7 +66,7 @@ always @(posedge iClk12M) begin
             4'd8: rMul[8] <= rMul[7] + iCoeff * iDelay[26:24];
             4'd9: rMul[9] <= rMul[8] + iCoeff * iDelay[29:27];
         endcase
-        if(rDelayIndex == 4'b1010)
+        if(rDelayIndex == 4'b1001)
             rDelayIndex <= 4'b0000;
         else
             rDelayIndex <= rDelayIndex + 1;

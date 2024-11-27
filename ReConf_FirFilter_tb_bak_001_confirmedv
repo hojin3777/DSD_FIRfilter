@@ -105,7 +105,7 @@ initial begin
     
     //Firfilter operation phase
     $display("----------input 001 and ram rd----------");
-    FirIn <= 3'b111;
+    FirIn <= 3'b001;
     repeat(1) @(posedge Clk12M);
     CsnRam <= 1'b0;
     WrnRam <= 1'b1;

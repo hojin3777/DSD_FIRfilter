@@ -105,7 +105,7 @@ initial begin
     
     //Firfilter operation phase
     $display("----------input 001 and ram rd----------");
-    FirIn <= 3'b111;
+    FirIn <= 3'b001;
     repeat(1) @(posedge Clk12M);
     CsnRam <= 1'b0;
     WrnRam <= 1'b1;
@@ -127,40 +127,10 @@ initial begin
     EnMul <= 1'b0;
     repeat(1) @(posedge Clk12M);
     EnAddAcc <= 1'b0;
-    repeat(7) @(posedge Clk12M);
+    repeat(1) @(posedge Clk12M);
+    repeat(6) @(posedge Clk12M);
     $display("----------input and ram rd ended----------");
 
-    
-    
-    
-    repeat(15) begin
-
-    //Firfilter operation phase w/o FirIn
-    $display("----------ram rd----------");
-    repeat(1) @(posedge Clk12M);
-    CsnRam <= 1'b0;
-    WrnRam <= 1'b1;
-    for(i=0; i<10; i=i+1) begin
-        repeat(1) begin
-            AddrRam <= i[3:0];
-            @(posedge Clk12M);
-        end
-        if(i==0)
-            EnMul <= 1'b1;
-        if(i==1)
-            EnAddAcc <= 1'b1;
-    end
-    AddrRam <= 6'b00_0000;
-    CsnRam <= 1'b1;
-    WrnRam <= 1'b1;
-    repeat(1) @(posedge Clk12M);
-    EnMul <= 1'b0;
-    repeat(1) @(posedge Clk12M);
-    EnAddAcc <= 1'b0;
-    repeat(7) @(posedge Clk12M);
-    $display("----------ram rd ended----------");
-
-    end
 
     repeat(4) @(posedge EnSample600k);
 
