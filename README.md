@@ -156,3 +156,39 @@ else <=> p_Update------------>p_MemRd <=> else
     - FSM 수정
     - testbench task화
     - 미사용 코드 정리
+
+### 11.28 회의 이후 수정사항
+- FSM
+    - wMemRd 삭제, iMemRdFlag 추가
+    - State 전이 과정 변경
+    - state별 출력 신호 변경
+    - default 신호 case문 내 default case로 이동
+    - iEnMul, iEnAddAcc 두 신호 iEnMAC로 통합
+    - 미사용 신호 oEnDelay 삭제
+
+- ModuleSelector
+    - iEnAddAcc, iEnMul 신호 iEnMAC으로 통합
+
+- MAC
+    - iEnAddAcc, iEnMul 신호 iEnMAC으로 통합
+    - rAcc관련 신호 삭제
+
+- MACSum
+    - iEnDelay신호 삭제
+
+- DelayChain
+    - iEnDelay신호 삭제
+
+- ReConf_FirFilter
+    - iEnAddAcc, iEnMul, wEnAddAcc, wEnMul 신호 iEnMAC, wEnMAC으로 통합
+    - wEnDelay 신호 삭제
+    - iMemRdFlag 신호 추가
+    - 모듈별 변경된 신호 반영하여 wire 조절
+
+- RAM 주소 제어가 제대로 이루어지지 않아 일부 값이 다시 0으로 초기화되는 현상을 sram범위 밖의 주소를 가리키는 방식으로 임시 해결
+- 회의 내용을 반영한 수정사항 정상 작동 확인
+- Todo
+    - 메모리 주소 제어 다시 FSM으로 복귀
+    - MAC 모듈 saturation check 로직 사용여부 테스트
+    - tb 코드 task화 작업
+    - 그 외 미사용 신호 및 코드 정리완료

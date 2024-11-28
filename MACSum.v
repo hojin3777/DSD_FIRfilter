@@ -1,6 +1,5 @@
 module MACSum(
     input iRsn, iClk12M, iEnSample600k,
-    input iEnDelay,
     input [1:0] iModuleSel,
     input signed [15:0] iMac1, iMac2, iMac3, iMac4,
 
@@ -26,17 +25,6 @@ always @(posedge iClk12M) begin
     if(iEnSample600k) begin
         rFinalSum <= rFinalSumDelay;
     end
-
-    /*
-    else begin
-        if(iEnDelay)begin
-            rFinalSumDelay <= iMac1 + iMac2 + iMac3 + iMac4;
-        end
-        if(iEnSample600k)begin
-            rFinalSum <= rFinalSumDelay;
-        end
-    end
-    */
 end
 
 assign oFirOut = rFinalSum;

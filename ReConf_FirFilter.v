@@ -1,9 +1,9 @@
 module ReConf_FirFilter(
     input iClk12M, iRsn,
     input iEnSample600k,
-    input iCoeffUpdateFlag,
+    input iCoeffUpdateFlag, iMemRdFlag,
     input iCsnRam, iWrnRam,
-    input iEnMul, iEnAddAcc,
+    input iEnMAC,
     input [5:0] iAddrRam,
     input [15:0] iWtDtRam,
     input [2:0] iFirIn,
@@ -16,16 +16,14 @@ wire wCsnRam, wWrnRam;
 wire [3:0] wAddrRam;
 wire [1:0] wModuleSel;
 wire [15:0] wWtDtRam;
-wire wEnMul, wEnAddAcc;
-wire wEnDelay;
+wire wEnMAC;
 
 //ModSel -> RAM/MAC
 wire wCsnRam1, wCsnRam2, wCsnRam3, wCsnRam4;
 wire wWrnRam1, wWrnRam2, wWrnRam3, wWrnRam4;
 wire [3:0] wAddrRam1, wAddrRam2, wAddrRam3, wAddrRam4;
 wire [15:0] wWtDtRam1, wWtDtRam2, wWtDtRam3, wWtDtRam4;
-wire wEnMul1, wEnMul2, wEnMul3, wEnMul4;
-wire wEnAddAcc1, wEnAddAcc2, wEnAddAcc3, wEnAddAcc4;
+wire wEnMAC1, wEnMAC2, wEnMAC3, wEnMAC4;
 
 //Ram to MAC
 wire [15:0] wRdDtRam1, wRdDtRam2, wRdDtRam3, wRdDtRam4;
@@ -36,24 +34,22 @@ wire [29:0] wDelay1, wDelay2, wDelay3, wDelay4;
 wire [15:0] wMac1, wMac2, wMac3, wMac4;
 
 FSM inst_FSM(
-    .iClk12M         (iClk12M),
-    .iRsn            (iRsn),
-    .iEnSample600k   (iEnSample600k),
-    .iCoeffUpdateFlag(iCoeffUpdateFlag),
-    .iCsnRam         (iCsnRam),
-    .iWrnRam         (iWrnRam),
-    .iEnMul          (iEnMul),
-    .iEnAddAcc       (iEnAddAcc),
-    .iAddrRam        (iAddrRam),
-    .iWtDtRam        (iWtDtRam),
-    .oCsnRam         (wCsnRam),
-    .oWrnRam         (wWrnRam),
-    .oAddrRam        (wAddrRam),
-    .oModuleSel      (wModuleSel),
-    .oWtDtRam        (wWtDtRam),
-    .oEnMul          (wEnMul),
-    .oEnAddAcc       (wEnAddAcc),
-    .oEnDelay        (wEnDelay)
+    .iClk12M            (iClk12M),
+    .iRsn               (iRsn),
+    .iEnSample600k      (iEnSample600k),
+    .iCoeffUpdateFlag   (iCoeffUpdateFlag),
+    .iMemRdFlag         (iMemRdFlag),
+    .iCsnRam            (iCsnRam),
+    .iWrnRam            (iWrnRam),
+    .iEnMAC             (iEnMAC),
+    .iAddrRam           (iAddrRam),
+    .iWtDtRam           (iWtDtRam),
+    .oCsnRam            (wCsnRam),
+    .oWrnRam            (wWrnRam),
+    .oAddrRam           (wAddrRam),
+    .oModuleSel         (wModuleSel),
+    .oWtDtRam           (wWtDtRam),
+    .oEnMAC             (wEnMAC)
 );
 
 // ModuleSelector instance
@@ -63,8 +59,7 @@ ModuleSelector inst_ModuleSelector(
     .iWrnRam         (wWrnRam),
     .iAddrRam        (wAddrRam),
     .iWtDtRam        (wWtDtRam),
-    .iEnMul          (wEnMul),
-    .iEnAddAcc       (wEnAddAcc),
+    .iEnMAC          (wEnMAC),
     .oCsnRam1        (wCsnRam1),
     .oCsnRam2        (wCsnRam2),
     .oCsnRam3        (wCsnRam3),
@@ -81,14 +76,10 @@ ModuleSelector inst_ModuleSelector(
     .oWtDtRam2       (wWtDtRam2),
     .oWtDtRam3       (wWtDtRam3),
     .oWtDtRam4       (wWtDtRam4),
-    .oEnMul1         (wEnMul1),
-    .oEnMul2         (wEnMul2),
-    .oEnMul3         (wEnMul3),
-    .oEnMul4         (wEnMul4),
-    .oEnAddAcc1      (wEnAddAcc1),
-    .oEnAddAcc2      (wEnAddAcc2),
-    .oEnAddAcc3      (wEnAddAcc3),
-    .oEnAddAcc4      (wEnAddAcc4)
+    .oEnMAC1         (wEnMAC1),
+    .oEnMAC2         (wEnMAC2),
+    .oEnMAC3         (wEnMAC3),
+    .oEnMAC4         (wEnMAC4)
 );
 
 // DelayChain instance
@@ -96,7 +87,6 @@ DelayChain inst_DelayChain(
     .iClk12M         (iClk12M),
     .iRsn            (iRsn),
     .iEnSample600k   (iEnSample600k),
-    .iEnDelay        (wEnDelay),
     .iFirIn          (iFirIn),
     .oDelay1         (wDelay1),
     .oDelay2         (wDelay2),
@@ -146,8 +136,7 @@ SpSram10x16 inst_SpSram4(
 MAC inst_MAC1(
     .iClk12M         (iClk12M),
     .iRsn            (iRsn),
-    .iEnMul          (wEnMul1),
-    .iEnAddAcc       (wEnAddAcc1),
+    .iEnMAC          (wEnMAC1),
     .iDelay          (wDelay1),
     .iCoeff          (wRdDtRam1),
     .oMac            (wMac1)
@@ -155,8 +144,7 @@ MAC inst_MAC1(
 MAC inst_MAC2(
     .iClk12M         (iClk12M),
     .iRsn            (iRsn),
-    .iEnMul          (wEnMul2),
-    .iEnAddAcc       (wEnAddAcc2),
+    .iEnMAC          (wEnMAC2),
     .iDelay          (wDelay2),
     .iCoeff          (wRdDtRam2),
     .oMac            (wMac2)
@@ -164,8 +152,7 @@ MAC inst_MAC2(
 MAC inst_MAC3(
     .iClk12M         (iClk12M),
     .iRsn            (iRsn),
-    .iEnMul          (wEnMul3),
-    .iEnAddAcc       (wEnAddAcc3),
+    .iEnMAC          (wEnMAC3),
     .iDelay          (wDelay3),
     .iCoeff          (wRdDtRam3),
     .oMac            (wMac3)
@@ -173,8 +160,7 @@ MAC inst_MAC3(
 MAC inst_MAC4(
     .iClk12M         (iClk12M),
     .iRsn            (iRsn),
-    .iEnMul          (wEnMul4),
-    .iEnAddAcc       (wEnAddAcc4),
+    .iEnMAC          (wEnMAC4),
     .iDelay          (wDelay4),
     .iCoeff          (wRdDtRam4),
     .oMac            (wMac4)
@@ -186,7 +172,6 @@ MACSum inst_MACSum(
     .iClk12M         (iClk12M),
     .iModuleSel      (wModuleSel),
     .iEnSample600k   (iEnSample600k),
-    .iEnDelay        (wEnDelay),
     .iMac1           (wMac1),
     .iMac2           (wMac2),
     .iMac3           (wMac3),

@@ -1,6 +1,5 @@
 module DelayChain(
     input iClk12M, iRsn, iEnSample600k, 
-    input iEnDelay,
     input signed [2:0] iFirIn,
 
     output [29:0] oDelay1, oDelay2, oDelay3, oDelay4
@@ -15,11 +14,8 @@ always @(posedge iClk12M) begin
             rDelay[i] <= 3'b000;
         end
     end
-    // if(iEnDelay) begin
-    //     rDelay[0] <= iFirIn;
-    // end
     if(iEnSample600k) begin
-        rDelay[0] <= iFirIn; //iEnDelay와 관계없이 Sample 신호만 따르도록 임시조치
+        rDelay[0] <= iFirIn; 
         rDelay[1]  <= rDelay[0];
         rDelay[2]  <= rDelay[1];
         rDelay[3]  <= rDelay[2];
