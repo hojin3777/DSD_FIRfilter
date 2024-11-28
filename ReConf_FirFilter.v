@@ -184,6 +184,7 @@ MAC inst_MAC4(
 MACSum inst_MACSum(
     .iRsn            (iRsn),
     .iClk12M         (iClk12M),
+    .iModuleSel      (wModuleSel),
     .iEnSample600k   (iEnSample600k),
     .iEnDelay        (wEnDelay),
     .iMac1           (wMac1),

@@ -138,6 +138,14 @@ else <=> p_Update------------>p_MemRd <=> else
     - reg signed rDelay를 추가하여 DelayChain에서 받은 30비트 수열을 각 3비트의 signed value로 변환
     - 누적 연산시 iDelay[n+2:n] 에서 미리 계산한 rDelay로 변경
 
+- 테스트 결과
+    - 100, 111 모두 계수 0x0A00~0x0A09 에 대한 정상적인 출력 확인
+
 - TODO
     - 결과 출력을 보기 위해 임의로 수정했던 알고리즘들 정리 필요
     - 수정하며 추가된 신호들, 사용하지 않는 신호 정리 필요
+
+### 11.28 확인된 문제
+- SRAM 2개 사용시 이전 MAC에서 누적합 결과가 다음 SRAM에서의 연산 결과에 영향을 줌 (0x0a09 + 0x0b00 = 0x1509)
+    - MACSum에도 [1:0] iModuleSel을 추가하여 사용중인 모듈 구분, top 모듈의 FSM에서 신호를 빼와 MACSum에 전송
+    - Input 001, 111에 대해 Sram1: 0x0a00~0x0a09, Sram2: 0x0b00~0x0b09 정상 출력 확인
