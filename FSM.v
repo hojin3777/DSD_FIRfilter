@@ -3,14 +3,13 @@ module FSM(
     input iCoeffUpdateFlag,
     input iMemRdFlag,
     input iCsnRam, iWrnRam, iEnMAC,
-    input [5:0] iAddrRam,
+    input [1:0] iModuleSel,
     input [15:0] iWtDtRam,
-    //input [5:0] iNumOfCoeff, //Not used in this project
 
     // To SpSram
     output reg oCsnRam, oWrnRam,
     output [3:0] oAddrRam,
-    output [1:0] oModuleSel, //[5:4] iAddr
+    output [1:0] oModuleSel,
     output [15:0] oWtDtRam,
     // To MAC
     output reg oEnMAC
@@ -33,12 +32,9 @@ else <=> p_Update             p_MemRd <=> else
 
 reg [1:0] rCurState, rNxtState;
 reg [3:0] rAddrRam; // Sequential address counter, Max = 10
+reg rLastRead; // Last address check
 
-// Last address check with explicit condition
-wire wLastRd;
-assign wLastRd = (iAddrRam[3:0] == 4'd9) ? 1'b1 : 1'b0;
-
-// State register
+// 1. State register
 always @(posedge iClk12M) begin
     if(!iRsn)
         rCurState <= p_Idle;
@@ -46,7 +42,7 @@ always @(posedge iClk12M) begin
         rCurState <= rNxtState;
 end
 
-// Next state logic
+// 2. Next state logic
 always @(*) begin
     case(rCurState)
         p_Idle: begin
@@ -75,26 +71,8 @@ always @(*) begin
         default: rNxtState <= p_Idle;
     endcase
 end
-/* // iAddrRam의 값은 tb에서 처리.
-// Address controler
-always @(posedge iClk12M) begin
-    if(!iRsn) begin
-        rAddrRam <= 4'b0000; // Max addr = 9
-    end
-    else begin
-        // Initial condition
-        if(rCurState == p_Out || rCurState == p_Idle) begin
-            rAddrRam <= 4'd0;
-        end
-        // Update & Memory read condition
-        else if(rCurState == p_Update || rCurState == p_MemRd) begin
-            if(!wLastRd)
-                rAddrRam <= rAddrRam + 4'd1;
-        end
-    end
-end
-*/
-// Control signals
+
+// 3. Control signals
 always @(*) begin
     case(rCurState)
         p_Idle: begin
@@ -125,9 +103,29 @@ always @(*) begin
     endcase
 end
 
+// Address controler
+always @(posedge iClk12M) begin
+    if(!iRsn) begin
+        rAddrRam <= 4'b0000;
+        rLastRead <= 1'b0;
+    end
+    // reset on idle
+    if(rCurState == p_Idle) begin
+        rAddrRam <= 4'b0000;
+        rLastRead <= 1'b0;
+    end
+    // Update & Memory read condition
+    else if(rCurState == p_Update || rCurState == p_MemRd || rCurState == p_MAC) begin
+        if(!rLastRead)
+            rAddrRam <= rAddrRam + 1'b1;
+        if(rAddrRam == 4'b1010)
+            rLastRead <= 1'b1;
+    end
+end
+
 // Module selection and data input
-assign oModuleSel = iAddrRam[5:4];
-assign oAddrRam = iAddrRam[3:0];
+assign oModuleSel = iModuleSel;
+assign oAddrRam = rAddrRam[3:0];
 assign oWtDtRam = iWtDtRam;
 
 endmodule

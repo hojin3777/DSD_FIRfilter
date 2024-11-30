@@ -4,7 +4,7 @@ module ReConf_FirFilter(
     input iCoeffUpdateFlag, iMemRdFlag,
     input iCsnRam, iWrnRam,
     input iEnMAC,
-    input [5:0] iAddrRam,
+    input [1:0] iModuleSel,
     input [15:0] iWtDtRam,
     input [2:0] iFirIn,
 
@@ -42,7 +42,7 @@ FSM inst_FSM(
     .iCsnRam            (iCsnRam),
     .iWrnRam            (iWrnRam),
     .iEnMAC             (iEnMAC),
-    .iAddrRam           (iAddrRam),
+    .iModuleSel         (iModuleSel),
     .iWtDtRam           (iWtDtRam),
     .oCsnRam            (wCsnRam),
     .oWrnRam            (wWrnRam),

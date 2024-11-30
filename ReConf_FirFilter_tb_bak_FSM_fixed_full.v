@@ -3,9 +3,9 @@
 module ReConf_FirFilter_tb;
 //For module
 reg Clk12M, Rsn, EnSample600k;
-reg CoeffUpdateFlag;
+reg CoeffUpdateFlag, MemRdFlag;
 reg CsnRam, WrnRam;
-reg EnMul, EnAddAcc;
+reg EnMAC;
 reg [5:0] AddrRam;
 reg [15:0] WtDtRam;
 reg [2:0] FirIn;
@@ -20,10 +20,10 @@ ReConf_FirFilter DUT(
     .iRsn               (Rsn),
     .iEnSample600k      (EnSample600k),
     .iCoeffUpdateFlag   (CoeffUpdateFlag),
+    .iMemRdFlag         (MemRdFlag),
     .iCsnRam            (CsnRam),
     .iWrnRam            (WrnRam),
-    .iEnMul             (EnMul),
-    .iEnAddAcc          (EnAddAcc),
+    .iEnMAC             (EnMAC),
     .iAddrRam           (AddrRam),
     .iWtDtRam           (WtDtRam),
     .iFirIn             (FirIn),
@@ -87,13 +87,13 @@ initial begin
     //Initial signals
     Clk12M <= 1'b0;
     EnSample600k <= 1'b0;
+    MemRdFlag <= 1'b0;
     Rsn <= 1'b1;
     count_20 <= 5'd0;
     CoeffUpdateFlag <= 1'b0;
     CsnRam <= 1'b1;
     WrnRam <= 1'b1;
-    EnMul <= 1'b0;
-    EnAddAcc <= 1'b0;
+    EnMAC <= 1'b0;
     AddrRam <= 6'b00_0000;
     WtDtRam <= 16'h0000;
     FirIn <= 3'b000;
@@ -114,21 +114,21 @@ initial begin
     $display("----------Raise Coeff flag and ram wrt----------");
     CoeffUpdateFlag <= 1'b1;
     repeat(1) @(posedge Clk12M);
-    CsnRam <= 1'b0;
-    WrnRam <= 1'b0;
+    // CsnRam <= 1'b0;
+    // WrnRam <= 1'b0;
     for(i=0; i<10; i=i+1) begin
         repeat(1) begin
-            AddrRam <= i[3:0];
+            // AddrRam <= i[3:0];
             WtDtRam <= coeff_mem[i];
             @(posedge Clk12M);
         end
     end
-    CsnRam <= 1'b1;
-    WrnRam <= 1'b1;
-    AddrRam <= 6'b00_0000;
+    // CsnRam <= 1'b1;
+    // WrnRam <= 1'b1;
+    // AddrRam <= 6'b00_1011;
     WtDtRam <= 16'h0000;
-    repeat(2) @(posedge Clk12M);
     CoeffUpdateFlag <= 1'b0;
+    repeat(2) @(posedge Clk12M);
     repeat(3) @(posedge Clk12M);
     $display("----------Ram update ended----------");
 
@@ -138,8 +138,8 @@ initial begin
     $display("----------Raise Coeff flag and ram wrt----------");
     CoeffUpdateFlag <= 1'b1;
     repeat(1) @(posedge Clk12M);
-    CsnRam <= 1'b0;
-    WrnRam <= 1'b0;
+    // CsnRam <= 1'b0;
+    // WrnRam <= 1'b0;
     for(i=0; i<10; i=i+1) begin
         repeat(1) begin
             AddrRam <= {2'b01,i[3:0]};
@@ -147,12 +147,12 @@ initial begin
             @(posedge Clk12M);
         end
     end
-    CsnRam <= 1'b1;
-    WrnRam <= 1'b1;
-    AddrRam <= 6'b00_0000;
+    // CsnRam <= 1'b1;
+    // WrnRam <= 1'b1;
+    AddrRam <= 6'b01_1011;
     WtDtRam <= 16'h0000;
-    repeat(2) @(posedge Clk12M);
     CoeffUpdateFlag <= 1'b0;
+    repeat(2) @(posedge Clk12M);
     repeat(3) @(posedge Clk12M);
     $display("----------Ram update ended----------");
 
@@ -161,8 +161,8 @@ initial begin
     $display("----------Raise Coeff flag and ram wrt----------");
     CoeffUpdateFlag <= 1'b1;
     repeat(1) @(posedge Clk12M);
-    CsnRam <= 1'b0;
-    WrnRam <= 1'b0;
+    // CsnRam <= 1'b0;
+    // WrnRam <= 1'b0;
     for(i=0; i<10; i=i+1) begin
         repeat(1) begin
             AddrRam <= {2'b10,i[3:0]};
@@ -170,12 +170,12 @@ initial begin
             @(posedge Clk12M);
         end
     end
-    CsnRam <= 1'b1;
-    WrnRam <= 1'b1;
-    AddrRam <= 6'b00_0000;
+    // CsnRam <= 1'b1;
+    // WrnRam <= 1'b1;
+    AddrRam <= 6'b10_1011;
     WtDtRam <= 16'h0000;
-    repeat(2) @(posedge Clk12M);
     CoeffUpdateFlag <= 1'b0;
+    repeat(2) @(posedge Clk12M);
     repeat(3) @(posedge Clk12M);
     $display("----------Ram update ended----------");
 
@@ -185,8 +185,8 @@ initial begin
     $display("----------Raise Coeff flag and ram wrt----------");
     CoeffUpdateFlag <= 1'b1;
     repeat(1) @(posedge Clk12M);
-    CsnRam <= 1'b0;
-    WrnRam <= 1'b0;
+    // CsnRam <= 1'b0;
+    // WrnRam <= 1'b0;
     for(i=0; i<10; i=i+1) begin
         repeat(1) begin
             AddrRam <= {2'b11,i[3:0]};
@@ -194,12 +194,12 @@ initial begin
             @(posedge Clk12M);
         end
     end
-    CsnRam <= 1'b1;
-    WrnRam <= 1'b1;
-    AddrRam <= 6'b00_0000;
+    // CsnRam <= 1'b1;
+    // WrnRam <= 1'b1;
+    AddrRam <= 6'b11_1011;
     WtDtRam <= 16'h0000;
-    repeat(2) @(posedge Clk12M);
     CoeffUpdateFlag <= 1'b0;
+    repeat(2) @(posedge Clk12M);
     repeat(3) @(posedge Clk12M);
     $display("----------Ram update ended----------");
 
@@ -207,136 +207,126 @@ initial begin
     //Firfilter operation phase
     $display("----------input 001 and ram rd----------");
     FirIn <= 3'b001;
+    MemRdFlag <= 1'b1;
     repeat(1) @(posedge Clk12M);
-    CsnRam <= 1'b0;
-    WrnRam <= 1'b1;
+    // CsnRam <= 1'b0;
+    // WrnRam <= 1'b1;
     FirIn <= 3'b000;
     for(i=0; i<10; i=i+1) begin
         repeat(1) begin
             AddrRam <= i[3:0];
             @(posedge Clk12M);
         end
-        if(i==0)
-            EnMul <= 1'b1;
-        if(i==1)
-            EnAddAcc <= 1'b1;
+        // if(i==0)
+        //     EnMAC <= 1'b1;
     end
     AddrRam <= 6'b00_0000;
-    CsnRam <= 1'b1;
-    WrnRam <= 1'b1;
+    // CsnRam <= 1'b1;
+    // WrnRam <= 1'b1;
+    MemRdFlag <= 1'b0;
     repeat(1) @(posedge Clk12M);
-    EnMul <= 1'b0;
-    repeat(1) @(posedge Clk12M);
-    EnAddAcc <= 1'b0;
-    repeat(7) @(posedge Clk12M);
+    // EnMAC <= 1'b0;
+    repeat(8) @(posedge Clk12M);
     $display("----------input and ram rd ended----------");
 
 
     repeat(9) begin
     //Firfilter operation phase w/o FirIn
     $display("----------ram rd----------");
+    MemRdFlag <= 1'b1;
     repeat(1) @(posedge Clk12M);
-    CsnRam <= 1'b0;
-    WrnRam <= 1'b1;
+    // CsnRam <= 1'b0;
+    // WrnRam <= 1'b1;
     for(i=0; i<10; i=i+1) begin
         repeat(1) begin
             AddrRam <= i[3:0];
             @(posedge Clk12M);
         end
-        if(i==0)
-            EnMul <= 1'b1;
-        if(i==1)
-            EnAddAcc <= 1'b1;
+        // if(i==0)
+        //     EnMul <= 1'b1;
     end
     AddrRam <= 6'b00_0000;
-    CsnRam <= 1'b1;
-    WrnRam <= 1'b1;
+    // CsnRam <= 1'b1;
+    // WrnRam <= 1'b1;
+    MemRdFlag <= 1'b0;
     repeat(1) @(posedge Clk12M);
-    EnMul <= 1'b0;
-    repeat(1) @(posedge Clk12M);
-    EnAddAcc <= 1'b0;
-    repeat(7) @(posedge Clk12M);
+    // EnMAC <= 1'b0;
+    repeat(8) @(posedge Clk12M);
     $display("----------ram rd ended----------");
     end
 
     repeat(10) begin
     //Firfilter operation phase w/o FirIn
     $display("----------ram rd----------");
+    MemRdFlag <= 1'b1;
     repeat(1) @(posedge Clk12M);
-    CsnRam <= 1'b0;
-    WrnRam <= 1'b1;
+    // CsnRam <= 1'b0;
+    // WrnRam <= 1'b1;
     for(i=0; i<10; i=i+1) begin
         repeat(1) begin
             AddrRam <= {2'b01,i[3:0]};
             @(posedge Clk12M);
         end
-        if(i==0)
-            EnMul <= 1'b1;
-        if(i==1)
-            EnAddAcc <= 1'b1;
+        // if(i==0)
+        //     EnMul <= 1'b1;
     end
     AddrRam <= 6'b01_0000;
-    CsnRam <= 1'b1;
-    WrnRam <= 1'b1;
+    // CsnRam <= 1'b1;
+    // WrnRam <= 1'b1;
+    MemRdFlag <= 1'b0;
     repeat(1) @(posedge Clk12M);
-    EnMul <= 1'b0;
-    repeat(1) @(posedge Clk12M);
-    EnAddAcc <= 1'b0;
-    repeat(7) @(posedge Clk12M);
+    // EnMul <= 1'b0;
+    repeat(8) @(posedge Clk12M);
     $display("----------ram rd ended----------");
     end
 
     repeat(10) begin
     //Firfilter operation phase w/o FirIn
     $display("----------ram rd----------");
+    MemRdFlag <= 1'b1;
     repeat(1) @(posedge Clk12M);
-    CsnRam <= 1'b0;
-    WrnRam <= 1'b1;
+    // CsnRam <= 1'b0;
+    // WrnRam <= 1'b1;
     for(i=0; i<10; i=i+1) begin
         repeat(1) begin
             AddrRam <= {2'b10,i[3:0]};
             @(posedge Clk12M);
         end
-        if(i==0)
-            EnMul <= 1'b1;
-        if(i==1)
-            EnAddAcc <= 1'b1;
+        // if(i==0)
+        //     EnMAC <= 1'b1;
     end
     AddrRam <= 6'b10_0000;
-    CsnRam <= 1'b1;
-    WrnRam <= 1'b1;
+    // CsnRam <= 1'b1;
+    // WrnRam <= 1'b1;
+    MemRdFlag <= 1'b0;
     repeat(1) @(posedge Clk12M);
-    EnMul <= 1'b0;
-    repeat(1) @(posedge Clk12M);
-    EnAddAcc <= 1'b0;
-    repeat(7) @(posedge Clk12M);
+    // EnMAC <= 1'b0;
+    repeat(8) @(posedge Clk12M);
     $display("----------ram rd ended----------");
     end
 
     repeat(10) begin
     //Firfilter operation phase w/o FirIn
     $display("----------ram rd----------");
+    MemRdFlag <= 1'b1;
     repeat(1) @(posedge Clk12M);
-    CsnRam <= 1'b0;
-    WrnRam <= 1'b1;
+    // CsnRam <= 1'b0;
+    // WrnRam <= 1'b1;
     for(i=0; i<10; i=i+1) begin
         repeat(1) begin
             AddrRam <= {2'b11,i[3:0]};
             @(posedge Clk12M);
         end
-        if(i==0)
-            EnMul <= 1'b1;
-        if(i==1)
-            EnAddAcc <= 1'b1;
+        // if(i==0)
+        //     EnMul <= 1'b1;
     end
     AddrRam <= 6'b11_0000;
-    CsnRam <= 1'b1;
-    WrnRam <= 1'b1;
+    // CsnRam <= 1'b1;
+    // WrnRam <= 1'b1;
+    MemRdFlag <= 1'b0;
     repeat(1) @(posedge Clk12M);
-    EnMul <= 1'b0;
-    repeat(1) @(posedge Clk12M);
-    EnAddAcc <= 1'b0;
-    repeat(7) @(posedge Clk12M);
+    // EnMAC <= 1'b0;
+    repeat(8) @(posedge Clk12M);
     $display("----------ram rd ended----------");
     end
 

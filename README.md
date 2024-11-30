@@ -192,3 +192,14 @@ else <=> p_Update------------>p_MemRd <=> else
     - MAC 모듈 saturation check 로직 사용여부 테스트
     - tb 코드 task화 작업
     - 그 외 미사용 신호 및 코드 정리완료
+
+### 11.30 수정사항
+- FSM
+    - rLastRead 신호 추가
+    - FSM에서 접근 주소 하위 4비트를 직접 제어하도록 복원
+    - iAddrRam신호 iModuleSel로 변경
+    - 해당 변경사항에 따른 top 모듈, tb 수정
+
+- Reconf_FirFilter_tb
+    - iAddrRam신호 iModuleSel로 변경
+    - Coeff_update, input_n_read, read_n_MAC 세 task로 기존 코드병합

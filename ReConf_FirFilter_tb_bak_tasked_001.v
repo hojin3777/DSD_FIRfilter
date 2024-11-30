@@ -172,7 +172,7 @@ initial begin
         coeff_update(2'b00+j, 6'b0+j*10);
     end
     // begin input
-    input_n_read(3'b111, 2'b00);
+    input_n_read(3'b001, 2'b00);
     // read and MAC calculate
     repeat(9) begin
         read_n_MAC(2'b00);

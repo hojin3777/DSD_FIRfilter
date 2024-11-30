@@ -11,23 +11,7 @@ module MAC(
 reg signed [15:0] rMul [9:0];
 reg [3:0] rDelayIndex; // max 1001;
 reg signed [2:0] rDelay [9:0];
-/* //saturation check 임시 비활성화
-wire signed [15:0] wMulResult;
-reg signed [15:0] rAccOut;
-reg signed [15:0] rMul;
-wire signed [15:0] wAccSum;
-wire wSatFlagP, wSatFlagN; //Saturation check flag
-wire [15:0] wAccNext; //Next accumulation check
 
-assign wMulResult = iDelay * iCoeff; //Get delay*coeff
-// 1 if current (Acc MSB)==0 && (Mul MSB)==0, but (adding result) == 1
-assign wAccSum = rAccOut + rMul;
-assign wSatFlagP = (!rAccOut[15] && !rMul[15] && wAccSum[15]) ? 1'b1 : 1'b0;
-assign wSatFlagN = (rAccOut[15] && rMul[15] && !wAccSum[15]) ? 1'b1 : 1'b0;
-assign wAccNext = wSatFlagP ? 16'h7FFF :
-                  wSatFlagN ? 16'h8000 :
-                  rAccOut + rMul;
-*/
 always @(*) begin
     // Input to local variable
     rDelay[0] <= iDelay[2:0];
@@ -60,7 +44,7 @@ always @(posedge iClk12M) begin
         rDelayIndex <= 4'b000;
     end
     if(iEnMAC) begin
-        case(rDelayIndex) //타이밍 문제로 곱셈과 누산 연산을 합쳐 테스트
+        case(rDelayIndex) //Mul and add together bc of timing issue
             4'd0: rMul[0] <= iCoeff * rDelay[0];
             4'd1: rMul[1] <= rMul[0] + iCoeff * rDelay[1];
             4'd2: rMul[2] <= rMul[1] + iCoeff * rDelay[2];
