@@ -4,8 +4,6 @@ module ReConf_FirFilter_tb;
 //For module
 reg Clk12M, Rsn, EnSample600k;
 reg CoeffUpdateFlag, MemRdFlag;
-reg CsnRam, WrnRam;
-reg EnMAC;
 reg [1:0] ModuleSel;
 reg [15:0] WtDtRam;
 reg [2:0] FirIn;
@@ -21,9 +19,6 @@ ReConf_FirFilter DUT(
     .iEnSample600k      (EnSample600k),
     .iCoeffUpdateFlag   (CoeffUpdateFlag),
     .iMemRdFlag         (MemRdFlag),
-    .iCsnRam            (CsnRam),
-    .iWrnRam            (WrnRam),
-    .iEnMAC             (EnMAC),
     .iModuleSel         (ModuleSel),
     .iWtDtRam           (WtDtRam),
     .iFirIn             (FirIn),
@@ -148,9 +143,6 @@ initial begin
     Rsn <= 1'b1;
     count_20 <= 5'd0;
     CoeffUpdateFlag <= 1'b0;
-    CsnRam <= 1'b1;
-    WrnRam <= 1'b1;
-    EnMAC <= 1'b0;
     ModuleSel <= 2'b00;
     WtDtRam <= 16'h0000;
     FirIn <= 3'b000;

@@ -2,7 +2,6 @@ module FSM(
     input iClk12M, iRsn, iEnSample600k,
     input iCoeffUpdateFlag,
     input iMemRdFlag,
-    input iCsnRam, iWrnRam, iEnMAC,
     input [1:0] iModuleSel,
     input [15:0] iWtDtRam,
 

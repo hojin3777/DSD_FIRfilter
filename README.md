@@ -203,3 +203,8 @@ else <=> p_Update------------>p_MemRd <=> else
 - Reconf_FirFilter_tb
     - iAddrRam신호 iModuleSel로 변경
     - Coeff_update, input_n_read, read_n_MAC 세 task로 기존 코드병합
+
+### 12.01 수정사항
+- FSM
+    - 사용하지 않는 iCsnRam, iWrnRam, iEnMAC 신호 삭제
+    - tb 및 top 모듈에서도 동일한 수정사항 반영
