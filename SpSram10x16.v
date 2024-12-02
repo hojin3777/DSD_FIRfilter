@@ -9,7 +9,6 @@ module SpSram10x16(
 );
 
 reg [15:0] rRam [9:0];
-// reg [15:0] rRdbuffer;
 
 always @(posedge iClk12M) begin
     if(!iRsn) begin
@@ -24,7 +23,6 @@ always @(posedge iClk12M) begin
         rRam[8] <= 16'h0000;
         rRam[9] <= 16'h0000;
         oRdDtRam <= 16'h0000;
-        // rRdbuffer <= 16'h0000;
     end
     if(!iCsnRam && !iWrnRam) begin
         // Data In referr to SRAM interface & timing
@@ -61,7 +59,5 @@ always @(posedge iClk12M) begin
     else
         oRdDtRam <= 16'h0000;
 end
-
-// assign oRdDtRam = rRdbuffer;
 
 endmodule

@@ -106,16 +106,16 @@ initial begin
     coeff_mem[7] = 12'ha07; 
     coeff_mem[8] = 12'ha08; 
     coeff_mem[9] = 12'ha09;
-    coeff_mem[10] = 16'heb00; 
-    coeff_mem[11] = 16'heb01; 
-    coeff_mem[12] = 16'heb02; 
-    coeff_mem[13] = 16'heb03; 
-    coeff_mem[14] = 16'heb04; 
-    coeff_mem[15] = 16'heb05; 
-    coeff_mem[16] = 16'heb06; 
-    coeff_mem[17] = 16'heb07; 
-    coeff_mem[18] = 16'heb08; 
-    coeff_mem[19] = 16'heb09;
+    coeff_mem[10] = 12'hb00; 
+    coeff_mem[11] = 12'hb01; 
+    coeff_mem[12] = 12'hb02; 
+    coeff_mem[13] = 12'hb03; 
+    coeff_mem[14] = 12'hb04; 
+    coeff_mem[15] = 12'hb05; 
+    coeff_mem[16] = 12'hb06; 
+    coeff_mem[17] = 12'hb07; 
+    coeff_mem[18] = 12'hb08; 
+    coeff_mem[19] = 12'hb09;
     coeff_mem[20] = 12'hc00; 
     coeff_mem[21] = 12'hc01; 
     coeff_mem[22] = 12'hc02; 
@@ -164,7 +164,7 @@ initial begin
         coeff_update(2'b00+j, 6'b0+j*10);
     end
     // begin input
-    input_n_read(3'b001, 2'b00);
+    input_n_read(3'b111, 2'b00);
     // read and MAC calculate
     repeat(9) begin
         read_n_MAC(2'b00);
